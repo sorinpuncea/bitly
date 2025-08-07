@@ -1,0 +1,21 @@
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    width: -webkit-fill-available;
+    width: fill-available;
+    display: flex;
+    flex-direction: row;
+    height: 4rem;
+    align-items: center;
+    padding: 1rem 2rem;
+    gap: 1rem;
+}
+
+.link {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #2563eb;
+    text-decoration: none;
+}
