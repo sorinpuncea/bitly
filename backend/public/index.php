@@ -1,46 +1,49 @@
 <?php
+declare(strict_types=1);
+
+use Api\Repositories\ShortLinkRepository;
+use Api\Controllers\ShortLinkController;
+
+require __DIR__ . '/../vendor/autoload.php';
+
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 
-$shortlinks = json_decode(file_get_contents(__DIR__ . '/../data/shortlinks.json'), true);
+try {
+    $repo = new ShortLinkRepository(__DIR__ . '/../data/shortlinks.json');
+    $controller = new ShortLinkController($repo);
 
-$path = $_SERVER['REQUEST_URI'];
+    $path = $_SERVER['REQUEST_URI'];
 
-// match /shortlinks/{id}
-if (preg_match('#/shortlinks/([\w\d]+)#', $path, $matches)) {
-    $id = $matches[1];
-    $found = null;
-    foreach ($shortlinks as $sl) {
-        if ($sl['id'] === $id) {
-            $found = $sl;
-            break;
+    // route /shortlinks/{id}
+    if (preg_match('#/shortlinks/([\w\d]+)#', $path, $matches)) {
+        $id = $matches[1];
+        $link = $controller->detail($id);
+
+        if ($link) {
+            echo json_encode($link, JSON_PRETTY_PRINT);
+        } else {
+            http_response_code(404);
+            echo json_encode(['error' => 'Shortlink not found']);
         }
+        exit;
     }
-    if ($found) {
-        echo json_encode($found);
-    } else {
-        http_response_code(404);
-        echo json_encode(['error' => 'Not found']);
+
+    // route  /shortlinks with pagination
+    if (strpos($path, '/shortlinks') !== false) {
+        $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+        $perPage = isset($_GET['perPage']) ? max(1, (int)$_GET['perPage']) : 10;
+        // simulate loading
+        // sleep(1);
+        $result = $controller->list($page, $perPage);
+        echo json_encode($result, JSON_PRETTY_PRINT);
+        exit;
     }
-    exit;
+
+    http_response_code(404);
+    echo json_encode(['error' => 'Invalid endpoint']);
+
+} catch (\Throwable $e) {
+    http_response_code(500);
+    echo json_encode(['error' => 'Internal server error']);
 }
-
-// match /shortlinks
-if (strpos($path, '/shortlinks') !== false) {
-    $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
-    $perPage = isset($_GET['perPage']) ? max(1, (int)$_GET['perPage']) : 10;
-    $offset = ($page - 1) * $perPage;
-    $paged = array_slice($shortlinks, $offset, $perPage);
-
-    echo json_encode([
-        'data' => $paged,
-        'total' => count($shortlinks)
-    ]);
-    exit;
-}
-
-
-// fallback to 404 page
-
-http_response_code(404);
-echo json_encode(['error' => 'Invalid endpoint']);
