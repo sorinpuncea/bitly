@@ -1,0 +1,46 @@
+.card {
+    background: #f8fafc;
+    border-radius: 1rem;
+    box-shadow: 0 2px 8px rgba(30, 41, 59, 0.07);
+    transition:
+        box-shadow 0.2s,
+        background 0.2s;
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    height: 100%;
+}
+.card:hover {
+    box-shadow: 0 6px 24px rgba(30, 41, 59, 0.13);
+    background: #e0e7ef;
+}
+.link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    height: 100%;
+}
+.label {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2563eb;
+    margin-bottom: 0.4rem;
+}
+
+.details {
+    color: #374151;
+    font-size: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.23rem;
+}
+
+.details span {
+    word-break: break-all;
+    overflow-wrap: anywhere;
+    display: inline-block;
+    max-width: 100%;
+    text-overflow: ellipsis;
+    white-space: pre-line;
+}

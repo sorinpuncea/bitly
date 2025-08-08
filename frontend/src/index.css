@@ -35,6 +35,11 @@ body {
 main {
     display: flex;
     justify-content: center;
+    padding: 4rem 0;
+}
+
+#root {
+    overflow: hidden;
 }
 
 h1 {
