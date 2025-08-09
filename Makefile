@@ -58,7 +58,7 @@ _seed_if_needed:
 		echo "✅ $(DATA_FILE) exists and is non-empty. Skipping seed."; \
 	else \
 		echo "🌱 Seeding data (generating $(SEED_COUNT) shortlinks)..."; \
-		$(DOCKER_COMPOSE) run backend php $(SEED_SCRIPT) $(SEED_COUNT); \
+		$(DOCKER_COMPOSE) exec backend php $(SEED_SCRIPT) $(SEED_COUNT); \
 		echo "✅ Seeding done."; \
 	fi
 
