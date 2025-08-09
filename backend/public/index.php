@@ -3,8 +3,11 @@ declare(strict_types=1);
 
 use Api\Repositories\ShortLinkRepository;
 use Api\Controllers\ShortLinkController;
+use Api\Logger;
 
 require __DIR__ . '/../vendor/autoload.php';
+
+$logger = new Logger();
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
@@ -17,6 +20,7 @@ try {
 
     // route /shortlinks/{id}
     if (preg_match('#/shortlinks/([\w\d]+)#', $path, $matches)) {
+        $logger->info('Hitting route for /shortlinks/' . $matches[1]);
         $id = $matches[1];
         $link = $controller->detail($id);
 
@@ -31,6 +35,7 @@ try {
 
     // route  /shortlinks with pagination
     if (strpos($path, '/shortlinks') !== false) {
+        $logger->info('Hitting route for /shortlinks' );
         $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
         $perPage = isset($_GET['perPage']) ? max(1, (int)$_GET['perPage']) : 10;
         // simulate loading
@@ -39,11 +44,12 @@ try {
         echo json_encode($result, JSON_PRETTY_PRINT);
         exit;
     }
-
+    $logger->info('No route matches');
     http_response_code(404);
     echo json_encode(['error' => 'Invalid endpoint']);
 
 } catch (\Throwable $e) {
+    $logger->error("Exception: " . $e->getMessage());
     http_response_code(500);
     echo json_encode(['error' => 'Internal server error']);
 }
