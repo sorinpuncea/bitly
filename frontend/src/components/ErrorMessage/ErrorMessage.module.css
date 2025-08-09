@@ -10,6 +10,7 @@
     box-shadow: 0 2px 6px rgba(220, 38, 38, 0.05);
     border: 1px solid #fecaca;
     font-size: 1.1rem;
+    max-height: 4rem;
 }
 .icon {
     margin-right: 0.7rem;
